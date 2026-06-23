@@ -263,7 +263,7 @@ st.set_page_config(
 
 @st.cache_data
 def get_master_table():
-    return build_master_table(save=True)
+    return build_master_table(save=False)
 
 
 def inject_styles():

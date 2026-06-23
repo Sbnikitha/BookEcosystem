@@ -1,7 +1,6 @@
-pandas
-openpyxl
-matplotlib
-folium
-plotly
-streamlit
-streamlit-folium
+pandas>=2.1.0
+openpyxl>=3.1.0
+folium>=0.15.0
+plotly>=5.18.0
+streamlit>=1.32.0
+streamlit-folium>=0.18.0
