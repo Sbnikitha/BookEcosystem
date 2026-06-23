@@ -1,0 +1,17 @@
+location_key,Location Name,Partner,Ecosystem Type,Total Children Served,Total Books Distributed,% of Ecosystem Books,Little Free Library Boxes,Books In Circulation (Library),Replenishment (Reading Logs),Total Book Activity,Circulation Period,Circulation Notes,Visitation (numeric),Latitude,Longitude,Coordinates Verified,Data Gaps
+ebci_cherokee_elem,Cherokee Elementary School,EBCI,Elementary School,710.0,2860.0,8.6,,4112.0,13572.0,17684.0,2023-24,4112,125.0,35.485,-83.3165,False,lfl_boxes
+ebci_qualla_hs,Qualla Boundary Head Start,EBCI,Preschool/Head Start,27.0,838.0,2.5,,,,,,,,35.4771,-83.3206,False,lfl_boxes; circulation_or_reading_log
+ebci_snowbird_lib,Snowbird Community Library,EBCI,Public/Community Library,,778.0,2.3,,,,,,,,35.4896,-83.7436,False,children_served; lfl_boxes; circulation_or_reading_log
+lumbee_pembroke_elem,Pembroke Elementary School,Lumbee,Elementary School,718.0,3366.0,10.1,,11338.0,2420.0,13758.0,2023-24,11338,,34.68,-79.195,False,lfl_boxes
+lumbee_pembroke_hs,Pembroke Head Start,Lumbee,Preschool/Head Start,59.0,3259.0,9.7,,,,,,,,34.68,-79.195,False,lfl_boxes; circulation_or_reading_log
+lumbee_robeson_lib,Robeson Public Library,Lumbee,Public/Community Library,,2944.0,8.8,,13171.0,,13171.0,2023-24,"13,171 total / 7,875 youth (through June 14) ",6308.0,34.68,-79.195,False,children_served; lfl_boxes
+nc_lame_deer_elem,Lame Deer Elementary School,NC,Elementary School,280.0,5950.0,17.8,,280.0,,280.0,2023-24,280,380.0,45.623,-106.678,False,lfl_boxes
+nc_lame_deer_hs,Lame Deer Head Start,NC,Preschool/Head Start,94.0,80.0,0.2,,,,,,,,45.623,-106.678,False,lfl_boxes; circulation_or_reading_log
+nc_woodenlegs_lib,Woodenlegs Library,NC,Tribal Library,,637.0,1.9,,2102.0,154.0,2256.0,2023-24,2102,1620.0,45.623,-106.678,False,children_served; lfl_boxes
+sdp_santo_elem,Santo Domingo Elementary School,SDP,Elementary School,218.0,653.0,2.0,,,,,2023-24,*,,35.5147,-106.359,False,lfl_boxes; circulation_or_reading_log
+sdp_santo_hs,Santo Domingo Pueblo Head Start,SDP,Preschool/Head Start,137.0,10100.0,30.2,,,,,,,,35.5147,-106.359,False,lfl_boxes; circulation_or_reading_log
+sdp_santo_pub_lib,Santo Domingo Pueblo Public Library,SDP,Public/Community Library,,760.0,2.3,,2059.0,,2059.0,2020-21,2059,,35.5147,-106.359,False,children_served; lfl_boxes
+yurok_bgc_lfl,Yurok Boys & Girls Club LFL,Yurok,Community Program,,72.0,0.2,,,,,,,,41.756,-124.201,False,children_served; lfl_boxes; circulation_or_reading_log
+yurok_omenok,O Me-nok Learning Center,Yurok,Elementary School,94.0,603.0,1.8,,2298.0,,2298.0,2023-24,2298,,41.756,-124.201,False,lfl_boxes
+yurok_kepel_hs,Ke'pel Head Start,Yurok,Preschool/Head Start,29.0,531.0,1.6,,,420.0,420.0,,,,41.756,-124.201,False,lfl_boxes
+yurok_del_norte_lib,Del Norte Public Library,Yurok,Public/Community Library,,,,,26847.0,,26847.0,2023-24,26847,3130.0,41.756,-124.201,False,children_served; books_distributed; lfl_boxes

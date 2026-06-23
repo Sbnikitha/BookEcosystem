@@ -1,0 +1,17 @@
+location_key,location_name,partner,ecosystem_type,latitude,longitude,lfl_boxes,coordinates_verified,notes
+ebci_qualla_hs,Qualla Boundary Head Start,EBCI,Preschool/Head Start,35.4771,-83.3206,,False,Update children/LFL counts with Sara & Gaby; coords approximate
+ebci_cherokee_elem,Cherokee Elementary School,EBCI,Elementary School,35.4850,-83.3165,,False,Includes school library program
+ebci_snowbird_lib,Snowbird Community Library,EBCI,Public/Community Library,35.4896,-83.7436,,False,Tribal community library
+lumbee_pembroke_hs,Pembroke Head Start,Lumbee,Preschool/Head Start,34.6800,-79.1950,,False,
+lumbee_pembroke_elem,Pembroke Elementary School,Lumbee,Elementary School,34.6800,-79.1950,,False,
+lumbee_robeson_lib,Robeson Public Library,Lumbee,Public/Community Library,34.6800,-79.1950,,False,Also listed as Pembroke Boys & Girls Club in dissemination
+nc_lame_deer_hs,Lame Deer Head Start,NC,Preschool/Head Start,45.6230,-106.6780,,False,
+nc_lame_deer_elem,Lame Deer Elementary School,NC,Elementary School,45.6230,-106.6780,,False,
+nc_woodenlegs_lib,Woodenlegs Library,NC,Tribal Library,45.6230,-106.6780,,False,
+sdp_santo_hs,Santo Domingo Pueblo Head Start,SDP,Preschool/Head Start,35.5147,-106.3590,,False,
+sdp_santo_elem,Santo Domingo Elementary School,SDP,Elementary School,35.5147,-106.3590,,False,
+sdp_santo_pub_lib,Santo Domingo Pueblo Public Library,SDP,Public/Community Library,35.5147,-106.3590,,False,
+yurok_kepel_hs,Ke'pel Head Start,Yurok,Preschool/Head Start,41.7560,-124.2010,,False,
+yurok_omenok,O Me-nok Learning Center,Yurok,Elementary School,41.7560,-124.2010,,False,
+yurok_del_norte_lib,Del Norte Public Library,Yurok,Public/Community Library,41.7560,-124.2010,,False,
+yurok_bgc_lfl,Yurok Boys & Girls Club LFL,Yurok,Community Program,41.7560,-124.2010,,False,
