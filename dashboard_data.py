@@ -219,7 +219,6 @@ def build_master_table(save=False):
     master["pct_of_ecosystem_books"] = master["books_distributed"].apply(
         lambda x: round(100 * x / ecosystem_total, 1) if pd.notna(x) and ecosystem_total else None
     )
-    master["data_gaps"] = master.apply(summarize_gaps, axis=1)
 
     column_order = [
         "location_key",
@@ -244,10 +243,8 @@ def build_master_table(save=False):
         "visitation_raw",
         "latitude",
         "longitude",
-        "coordinates_verified",
         "dissemination_categories",
         "notes",
-        "data_gaps",
     ]
     master = master[column_order].sort_values(["partner", "ecosystem_type", "location_name"])
 
@@ -279,8 +276,6 @@ def master_dashboard_export(master):
             "visitation_numeric",
             "latitude",
             "longitude",
-            "coordinates_verified",
-            "data_gaps",
         ]
     ].rename(
         columns={
@@ -299,8 +294,6 @@ def master_dashboard_export(master):
             "visitation_numeric": "Visitation (numeric)",
             "latitude": "Latitude",
             "longitude": "Longitude",
-            "coordinates_verified": "Coordinates Verified",
-            "data_gaps": "Data Gaps",
         }
     )
 

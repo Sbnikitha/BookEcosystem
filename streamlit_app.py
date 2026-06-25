@@ -21,6 +21,7 @@ from dashboard_data import (
     master_dashboard_export,
     partner_dashboard_table,
     partner_summary,
+    summarize_gaps,
 )
 
 # ── Brand & theme ──────────────────────────────────────────────────────────────
@@ -910,7 +911,9 @@ def main():
 
     with tab_data:
         section_header("Data quality", "Fields missing from the location master table.")
-        gaps = filtered[filtered["data_gaps"].astype(str).str.len() > 0][
+        gaps_df = filtered.copy()
+        gaps_df["data_gaps"] = gaps_df.apply(summarize_gaps, axis=1)
+        gaps = gaps_df[gaps_df["data_gaps"].astype(str).str.len() > 0][
             ["location_name", "partner", "ecosystem_type", "data_gaps", "notes"]
         ]
         if gaps.empty:
