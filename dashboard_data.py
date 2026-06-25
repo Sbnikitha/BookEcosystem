@@ -6,7 +6,81 @@ import pandas as pd
 ROOT = Path(__file__).parent
 DATASET = ROOT / "dataset"
 REGISTRY = ROOT / "data" / "location_registry.csv"
+EXCEL = ROOT / "Combined Statistics_All Partners.xlsx"
 OUTPUT = DATASET / "location_master.csv"
+
+EXCEL_CATALOG = [
+    {
+        "sheet": "New Lumbee Reading Data",
+        "category": "Reading assessments",
+        "partner": "Lumbee",
+        "parsed_key": "reading_assessments",
+        "description": "NC school report cards, EOG reading, enrollment metrics",
+    },
+    {
+        "sheet": "New EBCI Reading Data",
+        "category": "Reading assessments",
+        "partner": "EBCI",
+        "parsed_key": "reading_assessments",
+        "description": "BIE report cards, ELA proficiency bands, enrollment",
+    },
+    {
+        "sheet": "New SDP Reading Data",
+        "category": "Reading assessments",
+        "partner": "SDP",
+        "parsed_key": "reading_assessments",
+        "description": "NM district report cards, literacy and proficiency",
+    },
+    {
+        "sheet": "New Yurok Reading Data",
+        "category": "Reading assessments",
+        "partner": "Yurok",
+        "parsed_key": "reading_assessments",
+        "description": "CAASPP ELA results and enrollment",
+    },
+    {
+        "sheet": "New NC Reading Data",
+        "category": "Reading assessments",
+        "partner": "NC",
+        "parsed_key": "reading_assessments",
+        "description": "ESSA report card ELA proficiency and enrollment",
+    },
+    {
+        "sheet": "Reading Scores",
+        "category": "Program reading scores",
+        "partner": "All",
+        "parsed_key": "reading_scores",
+        "description": "K-readiness, 4th grade NAEP-style, EOG results by partner",
+    },
+    {
+        "sheet": "Library Usage Stats",
+        "category": "Library usage",
+        "partner": "All",
+        "parsed_key": "library_usage",
+        "description": "School and public/tribal library circulation, visits, programs",
+    },
+    {
+        "sheet": "Enrollment #s",
+        "category": "Enrollment",
+        "partner": "All",
+        "parsed_key": "enrollment",
+        "description": "Head Start and school enrollment by partner location",
+    },
+    {
+        "sheet": "Reading Log Stats",
+        "category": "Reading logs",
+        "partner": "All",
+        "parsed_key": "reading_logs",
+        "description": "Monthly books-read logs across Head Start, school, and public libraries",
+    },
+    {
+        "sheet": "Dissemination #s",
+        "category": "Book dissemination",
+        "partner": "All",
+        "parsed_key": "dissemination",
+        "description": "LFL books distributed by site, book fairs, and giveaways",
+    },
+]
 
 LOCATION_ALIASES = {
     "EBCI: Qualla Boundary Head Start": "ebci_qualla_hs",
@@ -308,4 +382,53 @@ def load_source_tables():
         "reading_assessments": pd.read_csv(DATASET / "reading_assessments.csv"),
         "reading_scores": pd.read_csv(DATASET / "reading_scores.csv"),
         "location_registry": pd.read_csv(REGISTRY),
+        "location_master": pd.read_csv(DATASET / "location_master.csv"),
+        "book_ecosystem_combined": pd.read_csv(DATASET / "book_ecosystem_combined.csv"),
     }
+
+
+def load_excel_sheet(sheet_name: str) -> pd.DataFrame:
+    raw = pd.read_excel(EXCEL, sheet_name=sheet_name, header=None)
+    raw.columns = [f"Col {i}" for i in range(len(raw.columns))]
+    return raw
+
+
+def load_all_excel_sheets() -> dict[str, pd.DataFrame]:
+    xl = pd.ExcelFile(EXCEL)
+    return {name: load_excel_sheet(name) for name in xl.sheet_names}
+
+
+def get_excel_catalog_items():
+    return EXCEL_CATALOG
+
+
+def get_excel_catalog_df() -> pd.DataFrame:
+    rows = []
+    parsed = load_source_tables()
+    for item in EXCEL_CATALOG:
+        key = item["parsed_key"]
+        parsed_df = parsed.get(key)
+        partner_rows = len(parsed_df)
+        if key == "reading_assessments" and item["partner"] != "All":
+            partner_rows = len(parsed_df[parsed_df["partner"] == item["partner"]])
+        rows.append(
+            {
+                "Excel sheet": item["sheet"],
+                "Category": item["category"],
+                "Partner": item["partner"],
+                "Parsed dataset": key,
+                "Parsed rows (relevant)": partner_rows,
+                "Description": item["description"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def get_parsed_data(parsed_key: str, partner: str | None = None) -> pd.DataFrame:
+    tables = load_source_tables()
+    df = tables[parsed_key].copy()
+    if parsed_key == "reading_assessments" and partner and partner != "All":
+        df = df[df["partner"] == partner]
+    elif parsed_key == "location_master" and partner and partner != "All":
+        df = df[df["partner"] == partner]
+    return df

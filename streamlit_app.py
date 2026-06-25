@@ -11,7 +11,12 @@ from streamlit_folium import st_folium
 from dashboard_data import (
     build_master_table,
     ecosystem_kpis,
+    get_excel_catalog_df,
+    get_excel_catalog_items,
+    get_parsed_data,
     hub_ranking,
+    load_all_excel_sheets,
+    load_excel_sheet,
     load_source_tables,
     master_dashboard_export,
     partner_dashboard_table,
@@ -695,6 +700,111 @@ def render_density_map(filtered, show_flow_lines, hub_only):
     st.plotly_chart(fig, use_container_width=True)
 
 
+def render_all_excel_data(partner_filter):
+    section_header(
+        "All Excel Data",
+        "Browse every sheet in Combined Statistics_All Partners.xlsx — raw workbook layout "
+        "and structured CSV extracts side by side.",
+    )
+
+    catalog = get_excel_catalog_df()
+    styled_dataframe(catalog, height=320)
+
+    st.markdown("---")
+
+    categories = sorted({item["category"] for item in get_excel_catalog_items()})
+    col_cat, col_view = st.columns([2, 1])
+    with col_cat:
+        category = st.selectbox("Data category", categories)
+    with col_view:
+        view_mode = st.radio(
+            "View",
+            ["Raw Excel + Parsed CSV", "Raw Excel only", "Parsed CSV only"],
+            horizontal=True,
+            label_visibility="collapsed",
+        )
+
+    sheets_in_category = [item for item in get_excel_catalog_items() if item["category"] == category]
+    sheet_labels = [f"{item['sheet']} ({item['partner']})" for item in sheets_in_category]
+    sheet_pick = st.selectbox(
+        "Excel sheet",
+        range(len(sheets_in_category)),
+        format_func=lambda i: sheet_labels[i],
+    )
+    selected = sheets_in_category[sheet_pick]
+
+    parsed_partner = partner_filter
+    if selected["partner"] != "All":
+        parsed_partner = selected["partner"]
+
+    raw_df = load_excel_sheet(selected["sheet"])
+    parsed_df = get_parsed_data(selected["parsed_key"], parsed_partner)
+
+    meta1, meta2, meta3 = st.columns(3)
+    meta1.metric("Raw Excel rows", len(raw_df))
+    meta2.metric("Raw Excel columns", len(raw_df.columns))
+    meta3.metric("Parsed CSV rows", len(parsed_df))
+
+    st.caption(selected["description"])
+
+    dl_col1, dl_col2, _ = st.columns([1, 1, 3])
+    with dl_col1:
+        st.download_button(
+            "Download raw sheet (CSV)",
+            raw_df.to_csv(index=False).encode("utf-8"),
+            file_name=f"{selected['sheet']}.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+    with dl_col2:
+        st.download_button(
+            "Download parsed data (CSV)",
+            parsed_df.to_csv(index=False).encode("utf-8"),
+            file_name=f"{selected['parsed_key']}_{parsed_partner}.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+    if view_mode == "Raw Excel only":
+        styled_dataframe(raw_df, height=480)
+    elif view_mode == "Parsed CSV only":
+        styled_dataframe(parsed_df, height=480)
+    else:
+        left, right = st.columns(2, gap="large")
+        with left:
+            st.markdown("**Raw Excel sheet**")
+            styled_dataframe(raw_df, height=480)
+        with right:
+            st.markdown(f"**Parsed dataset: `{selected['parsed_key']}`**")
+            styled_dataframe(parsed_df, height=480)
+
+    with st.expander("Browse all parsed datasets from Excel", expanded=False):
+        all_parsed = load_source_tables()
+        parsed_keys = [
+            "reading_assessments",
+            "reading_scores",
+            "enrollment",
+            "library_usage",
+            "reading_logs",
+            "dissemination",
+            "book_ecosystem_combined",
+            "location_master",
+        ]
+        pick = st.selectbox("Parsed dataset", parsed_keys, key="all_parsed_pick")
+        df = all_parsed[pick]
+        if pick == "reading_assessments" and partner_filter != "All":
+            df = df[df["partner"] == partner_filter]
+        elif pick == "location_master" and partner_filter != "All":
+            df = df[df["partner"] == partner_filter]
+        st.caption(f"{len(df)} rows")
+        styled_dataframe(df, height=360)
+
+    with st.expander("Raw Excel — all 10 sheets (quick jump)", expanded=False):
+        all_sheets = load_all_excel_sheets()
+        jump = st.selectbox("Sheet", list(all_sheets.keys()), key="jump_sheet")
+        styled_dataframe(all_sheets[jump], height=300)
+
+
 def render_footer():
     st.markdown(
         '<div class="footer">Reading Nation Waterfall · Book Ecosystem Dashboard · Data updated from partner statistics</div>',
@@ -731,8 +841,15 @@ def main():
     render_hero()
     filtered = filter_master(master, partner, selected_types)
 
-    tab_master, tab_distribution, tab_density, tab_partner, tab_data = st.tabs(
-        ["Master Table", "Book Distribution", "Density Map", "Partner Summary", "Data Quality"]
+    tab_master, tab_distribution, tab_density, tab_partner, tab_excel, tab_data = st.tabs(
+        [
+            "Master Table",
+            "Book Distribution",
+            "Density Map",
+            "Partner Summary",
+            "All Excel Data",
+            "Data Quality",
+        ]
     )
 
     with tab_master:
@@ -788,8 +905,11 @@ def main():
                 })
             )
 
+    with tab_excel:
+        render_all_excel_data(partner)
+
     with tab_data:
-        section_header("Data quality & source records", "Review gaps and underlying source tables.")
+        section_header("Data quality", "Fields missing from the location master table.")
         gaps = filtered[filtered["data_gaps"].astype(str).str.len() > 0][
             ["location_name", "partner", "ecosystem_type", "data_gaps", "notes"]
         ]
@@ -797,10 +917,10 @@ def main():
             st.success("All fields complete for the current filter.")
         else:
             styled_dataframe(gaps)
-        st.markdown("---")
-        sources = load_source_tables()
-        pick = st.selectbox("Source dataset", list(sources.keys()))
-        styled_dataframe(sources[pick], height=360)
+        st.info(
+            "Partner-level book fairs, giveaways, and registry-only fields are documented "
+            "in the **All Excel Data** tab."
+        )
 
     render_footer()
 
